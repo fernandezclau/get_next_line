@@ -6,7 +6,7 @@
 /*   By: claferna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 16:49:34 by claferna          #+#    #+#             */
-/*   Updated: 2024/03/25 18:00:21 by claferna         ###   ########.fr       */
+/*   Updated: 2024/03/25 20:50:36 by claferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@ char	*get_next_line(int fd)
 	char			*next_line;
 	
 	//ERROR COMPROBATIONS
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &next_ine, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &next_line, 0) < 0)
 		return (0);
 	//CREATION OF THE LIST
-	ft_lstnew(&list);
+	ft_lstnew(&list, fd);
 	if (!list)
 		return (0);
 	//GET THE LINE
-	next_line = ft_get_line(list), 
+	next_line = ft_get_line(list);
 	//CLEAN LIST
 	ft_clean_list(&list);
 	return (next_line);
@@ -45,5 +45,7 @@ int main(void)
 		return (0);
 	char *first_line = get_next_line(fd);
 	printf("Linea 1: %s", first_line);
+	free(fist_line);
+	first_line = NULL;
 	return (0);
 }

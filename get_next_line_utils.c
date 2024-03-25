@@ -6,7 +6,7 @@
 /*   By: claferna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 16:52:33 by claferna          #+#    #+#             */
-/*   Updated: 2024/03/25 18:00:19 by claferna         ###   ########.fr       */
+/*   Updated: 2024/03/25 20:50:34 by claferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	ft_find_line(t_list *list)
 	int	i;
 
 	if (!list)
-		return (0);
+		return (NULL);
 	while (list)
 	{
 		i = 0;
@@ -39,30 +39,30 @@ void	ft_lstnew(t_list **list, int fd)
 	int		read_bytes;
 	char	*buffer;
 
-	while (!ft_find_line(*lst)) //find \n
+	while (!ft_find_line(*list)) //find \n
 	{
 		buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE);
 		if (!buffer)
-			return (0);
+			return (NULL);
 		read_bytes = read(fd, buffer, BUFFER_SIZE);
 		if (!read_bytes)
 		{
 			free(buffer);
-			return (0);
+			return (NULL);
 		}
 		buffer[read_bytes] = '\0';
-		ft_lstadd_line(lst, buffer);
+		ft_lstadd_line(list, buffer);
 	}
 }
 
 /* DESC: Finds the last element of a list*/
-t_list	ft_lstlast(t_list *list)
+t_list	*ft_lstlast(t_list *list)
 {
-	if (!lst)
-		return (0);
-	while (lst->next)
-		lst = lst->next;
-	return (lst);
+	if (!list)
+		return (NULL);
+	while (list->next)
+		list = list->next;
+	return (list);
 }
 
 /* DESC: Add new element to a list.*/
@@ -71,12 +71,12 @@ void	ft_lstadd_line(t_list **list, char *buffer)
 	t_list	*new_node;
 	t_list	*last_node;
 
-	new_node = (t_list *)malloc(sizeof(t_list);
+	new_node = (t_list *)malloc(sizeof(t_list));
 	last_node = ft_lstlast(*list);
 	if (!new_node)
-		return (0);
+		return ;
 	if (!last_node)
-		*lst = new_node;
+		*list = new_node;
 	else
 		last_node->next = new_node;
 	new_node->content = buffer;
@@ -87,10 +87,12 @@ void	ft_lstadd_line(t_list **list, char *buffer)
 int	ft_get_len_line(t_list *list)
 {
 	int	len;
+	int	i;
 
+	i = 0;
 	len = 0;
 	if (!list)
-		return (0);
+		return (NULL);
 	//Iterating through the elements till '\0' and counting
 	while (list)
 	{
@@ -99,7 +101,7 @@ int	ft_get_len_line(t_list *list)
 			if (list->content[i] == '\n')
 			{
 				len++;
-				return(len);
+				return (len);
 			}
 			i++;
 			len++;
@@ -119,20 +121,21 @@ void	ft_extract_line_lst(t_list *list, char *line)
 	int	k;
 
 	if (!list)
-		return (0);
+		return;
 	//Asignation of the content of the list to line till '\0' found 
+	k = 0;
 	while (list)
 	{
 		i = 0;
 		while (list->content[i])
 		{
-			if (lst->content[i] == '\n')
+			if (list->content[i] == '\n')
 			{
 				line[k++] = '\n';
 				line[k] = '\0';
-				return ;
+				return (NULL);
 			}
-			line[k++] = lst->content[i++];
+			line[k++] = list->content[i++];
 		}
 		list = list->next;
 	}
@@ -143,12 +146,12 @@ void	ft_extract_line_lst(t_list *list, char *line)
 /*
 ** DESC: Gets the current line of the file
 */
-char	*ft_get_line(t_list *lst)
+char	*ft_get_line(t_list *list)
 {
 	int		len_line;
 	char	*line;
 
-	if (!lst)
+	if (!list)
 		return (0);
 	//Get length of the line to assign malloc
 	len_line = ft_get_len_line(list);
@@ -156,6 +159,43 @@ char	*ft_get_line(t_list *lst)
 	if (!line)
 		return (0);
 	//Extract line from the list
-	ft_extract_line_lst(lst, line);
+	ft_extract_line_lst(list, line);
 	return (line);
+}
+
+/*
+** DESC: Copies the cleaned list into the actual list.
+*/
+void	ft_copy_list(t_list *last_node, t_list *clean_node)
+{
+	
+}
+
+/*
+** DESC: Cleans the list for further reads.
+*/
+void	ft_clean_list(t_list **list)
+{
+	t_list	*last_node;
+	t_list	*clean_node;
+	char	*buffer;
+	int		i;
+	int		k;
+	int		j;
+
+	buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+	clean_node = (char *)malloc(sizeof(t_list));
+	if (!buffer || !clean_node)
+		return (NULL);
+	last_node = ft_lstlast(*lst);
+	i = 0;
+	k = 0;
+	while (last_node->content[i] != '\0' && last_node->content[i] != '\n'
+		   	&& last_node->content[i++])
+		buffer[k++] = last_node->content[i++];
+	buffer[k] = '\0';
+	clean_node->content = buffer;
+	clean_node->next = NULL;
+	//Copy the cleaned list to the actual list
+	ft_copy_list(last_node, clean_node);
 }
