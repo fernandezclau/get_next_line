@@ -6,7 +6,7 @@
 #    By: claferna <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/25 16:44:59 by claferna          #+#    #+#              #
-#    Updated: 2024/03/25 16:48:48 by claferna         ###   ########.fr        #
+#    Updated: 2024/03/25 16:54:02 by claferna         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ LIB		=	ar -rcs
 
 RM		=	rm -f
 
-SRC		=	get_next_line.c get_next_line_utils.c\
+SRC		=	get_next_line.c	get_next_line_utils.c
 
 OBJS	=	$(SRC:.c=.o)
 
