@@ -6,7 +6,7 @@
 /*   By: claferna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 16:52:33 by claferna          #+#    #+#             */
-/*   Updated: 2024/03/26 17:59:58 by claferna         ###   ########.fr       */
+/*   Updated: 2024/03/26 18:55:25 by claferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,19 @@ int	ft_find_line(t_list *list)
 	int	i;
 
 	if (!list)
-		return (1);
+		return (0);
 	while (list)
 	{
 		i = 0;
-		printf("Hemos entrado aqui: %s", list->content);
 		while (list->content[i] && i < BUFFER_SIZE)
 		{
 			if (list->content[i] == '\n')
-				return (0);
+				return (1);
 			i++;
 		}
 		list = list->next; 
 	}
-	return (1);
+	return (0);
 }
 
 /* DESC: Create a list of lines*/
@@ -40,7 +39,6 @@ void	ft_lstnew(t_list **list, int fd)
 {
 	int		read_bytes;
 	char	*buffer;
-	printf(" puto valor %d", ft_find_line(*list));
 	while (!ft_find_line(*list)) //find \n
 	{
 		buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE);
@@ -53,7 +51,6 @@ void	ft_lstnew(t_list **list, int fd)
 			return ;
 		}
 		buffer[read_bytes] = '\0';
-		printf("Este es el buffer %s", buffer);
 		ft_lstadd_line(list, buffer);
 	}
 }
@@ -83,7 +80,6 @@ void	ft_lstadd_line(t_list **list, char *buffer)
 	else
 		last_node->next = new_node;
 	new_node->content = buffer;
-	printf("LSTADD %s", buffer);
 	new_node->next = NULL;
 }
 
@@ -100,7 +96,7 @@ int	ft_get_len_line(t_list *list)
 	//Iterating through the elements till '\0' and counting
 	while (list)
 	{
-		while (list->content[i] && list->content[i] != '\n')
+		while (list->content[i])
 		{
 			if (list->content[i] == '\n')
 			{
@@ -174,14 +170,15 @@ void	ft_erase_elements(t_list **list, t_list *clean_node, char *buffer)
 {
 	t_list	*aux;
 	
+	aux = NULL;
 	if (!list)
 		return ;
-	while (list)
+	while (*list != NULL)
 	{
 		aux = (*list)->next;
-		free((*list)->content);
-		free(list);
-		list = &aux->next;
+        free((*list)->content);
+        free(*list);
+        *list = aux;
 	}
 	*list = NULL;
 	if (clean_node->content[0])
@@ -204,7 +201,6 @@ void	ft_clean_list(t_list **list)
 	char	*next_line;
 	int		i;
 	int		k;
-	int		j;
 
 	next_line = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
 	clean_node = (t_list *)malloc(sizeof(t_list));
@@ -216,15 +212,15 @@ void	ft_clean_list(t_list **list)
 	//Skipping the line that will be printed
 	while (last_node->content[i] != '\0' && last_node->content[i] != '\n')
 		i++;
+	if (last_node->content[i]=='\n')
+		i++;
 	//Dumping into the buffer the lines not printed
-	while (last_node->content[i] != '\0' && last_node->content[i] != '\n'
-		   	&& last_node->content[i++])
+	while (last_node->content[i] != '\0' && last_node->content[i] != '\n')
 		next_line[k++] = last_node->content[i++];
 	next_line[k] = '\0';
 	//Asigning it to the clean node
 	clean_node->content = next_line;
 	clean_node->next = NULL;
 	//Eraising line that has already been printed
-	printf("Aqui %s", clean_node->content);
-	//ft_erase_elements(list, clean_node, next_line);
+	ft_erase_elements(list, clean_node, next_line);
 }
