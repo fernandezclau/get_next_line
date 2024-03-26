@@ -12,6 +12,7 @@
 
 #include "get_next_line.h"
 
+
 /*
 ** DESCRIPTION: Gets the next line of a file, divided by \n (line break).
 */
@@ -43,7 +44,7 @@ int main(void)
 	int fd = open(file, O_RDONLY);
 	if (fd == -1)
 		return (0);
-	int i = 4;
+	int i = 7;
 	while (i--)
 		printf("Linea %d: %s", i, get_next_line(fd));
 	return (0);

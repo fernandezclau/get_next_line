@@ -96,7 +96,8 @@ int	ft_get_len_line(t_list *list)
 	//Iterating through the elements till '\0' and counting
 	while (list)
 	{
-		while (list->content[i])
+		i = 0;
+		while (list->content[i] != '\0')
 		{
 			if (list->content[i] == '\n')
 			{
@@ -127,7 +128,7 @@ void	ft_extract_line_lst(t_list *list, char *line)
 	while (list)
 	{
 		i = 0;
-		while (list->content[i])
+		while (list->content[i] != '\0')
 		{
 			if (list->content[i] == '\n')
 			{
@@ -215,7 +216,7 @@ void	ft_clean_list(t_list **list)
 	if (last_node->content[i]=='\n')
 		i++;
 	//Dumping into the buffer the lines not printed
-	while (last_node->content[i] != '\0' && last_node->content[i] != '\n')
+	while (last_node->content[i] != '\0')
 		next_line[k++] = last_node->content[i++];
 	next_line[k] = '\0';
 	//Asigning it to the clean node
