@@ -6,14 +6,16 @@
 /*   By: claferna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 16:38:14 by claferna          #+#    #+#             */
-/*   Updated: 2024/03/26 17:47:59 by claferna         ###   ########.fr       */
+/*   Updated: 2024/03/26 21:18:17 by claferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 /*DEFAULT BUFFER_SIZE DECLARATION*/
-# define BUFFER_SIZE 10
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 10
+# endif
 
 # include <unistd.h>	//READ LIB
 # include <stddef.h>	//SIZE_T LIB
@@ -29,14 +31,14 @@ typedef struct s_list
 
 /*MAIN FUNCTION*/
 char	*get_next_line(int fd);
-/*UTILS FUNCIONS*/
+void	ft_lstnew(t_list **list, int fd);
 char	*ft_get_line(t_list *list);
 void	ft_clean_list(t_list **list);
+/*UTILS FUNCTIONS*/
 void	ft_extract_line_lst(t_list *list, char *line);
 void	ft_erase_elements(t_list **list, t_list *clean_node, char *buffer);
-/*LST RELATED FUNCTIONS*/
 int		ft_find_line(t_list *lst);
-void	ft_lstnew(t_list **list, int fd);
 void	ft_lstadd_line(t_list **list, char *buffer);
 t_list	*ft_lstlast(t_list *list);
+int		ft_get_len_line(t_list *list);
 #endif
