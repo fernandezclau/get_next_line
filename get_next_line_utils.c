@@ -6,11 +6,12 @@
 /*   By: claferna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 16:52:33 by claferna          #+#    #+#             */
-/*   Updated: 2024/03/25 20:50:34 by claferna         ###   ########.fr       */
+/*   Updated: 2024/03/26 17:59:58 by claferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 /* DESC: Finds the '\n' character*/
 int	ft_find_line(t_list *list)
@@ -18,19 +19,20 @@ int	ft_find_line(t_list *list)
 	int	i;
 
 	if (!list)
-		return (NULL);
+		return (1);
 	while (list)
 	{
 		i = 0;
+		printf("Hemos entrado aqui: %s", list->content);
 		while (list->content[i] && i < BUFFER_SIZE)
 		{
 			if (list->content[i] == '\n')
-				return (1);
+				return (0);
 			i++;
 		}
 		list = list->next; 
 	}
-	return (0);
+	return (1);
 }
 
 /* DESC: Create a list of lines*/
@@ -38,19 +40,20 @@ void	ft_lstnew(t_list **list, int fd)
 {
 	int		read_bytes;
 	char	*buffer;
-
+	printf(" puto valor %d", ft_find_line(*list));
 	while (!ft_find_line(*list)) //find \n
 	{
 		buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE);
 		if (!buffer)
-			return (NULL);
+			return ;
 		read_bytes = read(fd, buffer, BUFFER_SIZE);
 		if (!read_bytes)
 		{
 			free(buffer);
-			return (NULL);
+			return ;
 		}
 		buffer[read_bytes] = '\0';
+		printf("Este es el buffer %s", buffer);
 		ft_lstadd_line(list, buffer);
 	}
 }
@@ -80,6 +83,7 @@ void	ft_lstadd_line(t_list **list, char *buffer)
 	else
 		last_node->next = new_node;
 	new_node->content = buffer;
+	printf("LSTADD %s", buffer);
 	new_node->next = NULL;
 }
 
@@ -92,7 +96,7 @@ int	ft_get_len_line(t_list *list)
 	i = 0;
 	len = 0;
 	if (!list)
-		return (NULL);
+		return (0);
 	//Iterating through the elements till '\0' and counting
 	while (list)
 	{
@@ -133,7 +137,7 @@ void	ft_extract_line_lst(t_list *list, char *line)
 			{
 				line[k++] = '\n';
 				line[k] = '\0';
-				return (NULL);
+				return ;
 			}
 			line[k++] = list->content[i++];
 		}
@@ -166,9 +170,28 @@ char	*ft_get_line(t_list *list)
 /*
 ** DESC: Copies the cleaned list into the actual list.
 */
-void	ft_copy_list(t_list *last_node, t_list *clean_node)
+void	ft_erase_elements(t_list **list, t_list *clean_node, char *buffer)
 {
+	t_list	*aux;
 	
+	if (!list)
+		return ;
+	while (list)
+	{
+		aux = (*list)->next;
+		free((*list)->content);
+		free(list);
+		list = &aux->next;
+	}
+	*list = NULL;
+	if (clean_node->content[0])
+		*list = clean_node;
+	else
+	{
+		free(buffer);
+		free(clean_node);
+		clean_node = NULL;
+	}
 }
 
 /*
@@ -178,24 +201,30 @@ void	ft_clean_list(t_list **list)
 {
 	t_list	*last_node;
 	t_list	*clean_node;
-	char	*buffer;
+	char	*next_line;
 	int		i;
 	int		k;
 	int		j;
 
-	buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
-	clean_node = (char *)malloc(sizeof(t_list));
-	if (!buffer || !clean_node)
-		return (NULL);
-	last_node = ft_lstlast(*lst);
+	next_line = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+	clean_node = (t_list *)malloc(sizeof(t_list));
+	if (!next_line || !clean_node)
+		return ;
+	last_node = ft_lstlast(*list);
 	i = 0;
 	k = 0;
+	//Skipping the line that will be printed
+	while (last_node->content[i] != '\0' && last_node->content[i] != '\n')
+		i++;
+	//Dumping into the buffer the lines not printed
 	while (last_node->content[i] != '\0' && last_node->content[i] != '\n'
 		   	&& last_node->content[i++])
-		buffer[k++] = last_node->content[i++];
-	buffer[k] = '\0';
-	clean_node->content = buffer;
+		next_line[k++] = last_node->content[i++];
+	next_line[k] = '\0';
+	//Asigning it to the clean node
+	clean_node->content = next_line;
 	clean_node->next = NULL;
-	//Copy the cleaned list to the actual list
-	ft_copy_list(last_node, clean_node);
+	//Eraising line that has already been printed
+	printf("Aqui %s", clean_node->content);
+	//ft_erase_elements(list, clean_node, next_line);
 }

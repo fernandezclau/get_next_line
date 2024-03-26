@@ -6,7 +6,7 @@
 /*   By: claferna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 16:49:34 by claferna          #+#    #+#             */
-/*   Updated: 2024/03/25 20:50:36 by claferna         ###   ########.fr       */
+/*   Updated: 2024/03/26 17:49:44 by claferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,11 @@ int main(void)
 	int fd = open(file, O_RDONLY);
 	if (fd == -1)
 		return (0);
+	int i = 4;
+	while (i--)
+		printf("Linea %d: %s", i, get_next_line(fd));
+		
 	char *first_line = get_next_line(fd);
 	printf("Linea 1: %s", first_line);
-	free(fist_line);
-	first_line = NULL;
 	return (0);
 }
