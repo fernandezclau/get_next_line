@@ -6,7 +6,7 @@
 /*   By: claferna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 16:49:34 by claferna          #+#    #+#             */
-/*   Updated: 2024/03/26 21:20:19 by claferna         ###   ########.fr       */
+/*   Updated: 2024/03/27 18:33:47 by claferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	ft_lstnew(t_list **list, int fd)
 		if (!buffer)
 			return ;
 		read_bytes = read(fd, buffer, BUFFER_SIZE);
-		if (!read_bytes)
+		if (!read_bytes || !list || read_bytes == -1)
 		{
 			free(buffer);
 			return ;
@@ -125,7 +125,11 @@ char	*get_next_line(int fd)
 		return (0);
 	ft_lstnew(&list, fd);
 	if (!list)
+	{
+		free(list);
+		list = NULL;
 		return (0);
+	}
 	next_line = ft_get_line(list);
 	ft_clean_list(&list);
 	return (next_line);
