@@ -6,7 +6,7 @@
 #    By: claferna <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/25 16:44:59 by claferna          #+#    #+#              #
-#    Updated: 2024/03/26 17:25:47 by claferna         ###   ########.fr        #
+#    Updated: 2024/03/27 18:19:07 by claferna         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,9 @@ SRC		=	get_next_line.c\
 
 OBJS	=	$(SRC:.c=.o)
 
-all		:	$(OBJS)
+all		:	$(NAME)
+
+$(NAME)	:	$(OBJS)
 			$(LIB) $(NAME) $(OBJS)
 
 .c.o	:	
