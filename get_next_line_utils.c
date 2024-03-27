@@ -6,7 +6,7 @@
 /*   By: claferna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 16:52:33 by claferna          #+#    #+#             */
-/*   Updated: 2024/03/26 21:15:25 by claferna         ###   ########.fr       */
+/*   Updated: 2024/03/27 21:18:24 by claferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ void	ft_lstadd_line(t_list **list, char *buffer)
 	t_list	*last_node;
 
 	new_node = (t_list *)malloc(sizeof(t_list));
+	if (!list)
+		return ;
 	last_node = ft_lstlast(*list);
 	if (!new_node)
 		return ;
@@ -116,4 +118,9 @@ void	ft_extract_line_lst(t_list *list, char *line)
 		list = list->next;
 	}
 	line[k] = '\0';
+}
+
+void hola(void)
+{
+	//TODO
 }

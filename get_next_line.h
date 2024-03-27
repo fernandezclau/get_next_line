@@ -6,7 +6,7 @@
 /*   By: claferna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 16:38:14 by claferna          #+#    #+#             */
-/*   Updated: 2024/03/26 21:18:17 by claferna         ###   ########.fr       */
+/*   Updated: 2024/03/27 18:31:57 by claferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 /*DEFAULT BUFFER_SIZE DECLARATION*/
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10
+#  define BUFFER_SIZE 1
 # endif
 
 # include <unistd.h>	//READ LIB
@@ -36,7 +36,7 @@ char	*ft_get_line(t_list *list);
 void	ft_clean_list(t_list **list);
 /*UTILS FUNCTIONS*/
 void	ft_extract_line_lst(t_list *list, char *line);
-void	ft_erase_elements(t_list **list, t_list *clean_node, char *buffer);
+void	ft_erase_elements(t_list **list, t_list *clean_node, char *next_line);
 int		ft_find_line(t_list *lst);
 void	ft_lstadd_line(t_list **list, char *buffer);
 t_list	*ft_lstlast(t_list *list);

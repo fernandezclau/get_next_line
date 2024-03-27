@@ -6,11 +6,26 @@
 /*   By: claferna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 16:49:34 by claferna          #+#    #+#             */
-/*   Updated: 2024/03/27 18:33:47 by claferna         ###   ########.fr       */
+/*   Updated: 2024/03/27 21:18:19 by claferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
+
+void	ft_lstclear(t_list **lst, void (*del)(void *))
+{
+	t_list	*aux;
+
+	while (*lst)
+	{
+		aux = (*lst)->next;
+		del((*lst)->content);
+		free(*lst);
+		*lst = aux;
+	}
+	*lst = NULL;
+}
 
 /*
 ** DESC: The 'ft_lstnew' creates a list of lines till '\n' is found.
@@ -22,11 +37,17 @@ void	ft_lstnew(t_list **list, int fd)
 
 	while (!ft_find_line(*list))
 	{
-		buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE);
+		buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
 		if (!buffer)
 			return ;
 		read_bytes = read(fd, buffer, BUFFER_SIZE);
-		if (!read_bytes || !list || read_bytes == -1)
+		if (read_bytes == -1)
+		{
+			//ft_lstclear(list, free);	
+			free(buffer);
+			return ;
+		}
+		if (read_bytes == 0)
 		{
 			free(buffer);
 			return ;
@@ -125,11 +146,7 @@ char	*get_next_line(int fd)
 		return (0);
 	ft_lstnew(&list, fd);
 	if (!list)
-	{
-		free(list);
-		list = NULL;
 		return (0);
-	}
 	next_line = ft_get_line(list);
 	ft_clean_list(&list);
 	return (next_line);
@@ -140,11 +157,16 @@ char	*get_next_line(int fd)
 int main(void)
 {
 	char *file = "file";
-	int fd = open(file, O_RDONLY);
+	int fd = open("jasdlkflajsdflksa", O_RDONLY);
 	if (fd == -1)
 		return (0);
 	int i = 7;
 	while (i--)
-		printf("Linea %d: %s", i, get_next_line(fd));
+	{
+		char *result = get_next_line(fd);
+		printf("Linea %d: %s", i, result);
+		free(result);
+	}
+	//system("leaks -q a.out");
 	return (0);
 }*/
