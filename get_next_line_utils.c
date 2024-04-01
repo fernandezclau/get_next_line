@@ -6,7 +6,7 @@
 /*   By: claferna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 16:52:33 by claferna          #+#    #+#             */
-/*   Updated: 2024/03/27 21:18:24 by claferna         ###   ########.fr       */
+/*   Updated: 2024/03/27 22:48:45 by claferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,4 @@ void	ft_extract_line_lst(t_list *list, char *line)
 		list = list->next;
 	}
 	line[k] = '\0';
-}
-
-void hola(void)
-{
-	//TODO
 }

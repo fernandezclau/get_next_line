@@ -6,31 +6,17 @@
 /*   By: claferna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 16:49:34 by claferna          #+#    #+#             */
-/*   Updated: 2024/03/27 21:18:19 by claferna         ###   ########.fr       */
+/*   Updated: 2024/04/01 08:55:41 by claferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 
-void	ft_lstclear(t_list **lst, void (*del)(void *))
-{
-	t_list	*aux;
-
-	while (*lst)
-	{
-		aux = (*lst)->next;
-		del((*lst)->content);
-		free(*lst);
-		*lst = aux;
-	}
-	*lst = NULL;
-}
-
 /*
 ** DESC: The 'ft_lstnew' creates a list of lines till '\n' is found.
 */
-void	ft_lstnew(t_list **list, int fd)
+int	ft_lstnew(t_list **list, int fd)
 {
 	int		read_bytes;
 	char	*buffer;
@@ -39,22 +25,22 @@ void	ft_lstnew(t_list **list, int fd)
 	{
 		buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
 		if (!buffer)
-			return ;
+			return (-1);
 		read_bytes = read(fd, buffer, BUFFER_SIZE);
 		if (read_bytes == -1)
 		{
-			//ft_lstclear(list, free);	
 			free(buffer);
-			return ;
+			return (-1);
 		}
 		if (read_bytes == 0)
 		{
 			free(buffer);
-			return ;
+			return (0);
 		}
 		buffer[read_bytes] = '\0';
 		ft_lstadd_line(list, buffer);
 	}
+	return (0);
 }
 
 /*
@@ -141,10 +127,21 @@ char	*get_next_line(int fd)
 {
 	static t_list	*list;
 	char			*next_line;
+	t_list			*aux;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &next_line, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
-	ft_lstnew(&list, fd);
+	if (ft_lstnew(&list, fd) == -1)
+	{
+		while (list)
+		{
+			aux = (list)->next;
+			free((list)->content);
+			free(list);
+			list = aux;
+		}
+		list = NULL;
+	}
 	if (!list)
 		return (0);
 	next_line = ft_get_line(list);
@@ -153,14 +150,13 @@ char	*get_next_line(int fd)
 }
 /*
 #include <stdio.h>
-
 int main(void)
 {
 	char *file = "file";
-	int fd = open("jasdlkflajsdflksa", O_RDONLY);
+	int fd = open(file, O_RDONLY);
 	if (fd == -1)
 		return (0);
-	int i = 7;
+	i = 9;
 	while (i--)
 	{
 		char *result = get_next_line(fd);

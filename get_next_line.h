@@ -6,7 +6,7 @@
 /*   By: claferna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 16:38:14 by claferna          #+#    #+#             */
-/*   Updated: 2024/03/27 18:31:57 by claferna         ###   ########.fr       */
+/*   Updated: 2024/04/01 08:55:43 by claferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ typedef struct s_list
 
 /*MAIN FUNCTION*/
 char	*get_next_line(int fd);
-void	ft_lstnew(t_list **list, int fd);
+int		ft_lstnew(t_list **list, int fd);
 char	*ft_get_line(t_list *list);
 void	ft_clean_list(t_list **list);
 /*UTILS FUNCTIONS*/
